@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Rotina</string>
+    <string name="app_name_etapa1">Rotina (Views)</string>
     <string name="titulo_meus_habitos">Meus hábitos</string>
     <string name="marcar_feito_hoje">Marcar como feito hoje</string>
     <string name="ja_feito_hoje">Feito hoje ✓ (toque para desfazer)</string>

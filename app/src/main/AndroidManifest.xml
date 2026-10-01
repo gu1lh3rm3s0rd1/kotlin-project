@@ -2,14 +2,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
+        android:name=".etapa2.RotinaApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar">
 
+        <!--
+            O app tem dois ícones na tela inicial do celular:
+            "Rotina" abre a Etapa 2 (Compose) e "Rotina (Views)" abre a Etapa 1 (XML).
+        -->
+
+        <!-- Etapa 2: Jetpack Compose -->
+        <activity
+            android:name=".etapa2.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!-- Etapa 1: Views/XML -->
         <activity
             android:name=".etapa1.ListaHabitosActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name_etapa1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
