@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Componente reutilizável: card de hábito.
+    Inflado pelo HabitoAdapter na lista, um item por hábito.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="?attr/colorSurfaceVariant"
+    android:elevation="2dp"
+    android:padding="16dp"
+    android:layout_marginBottom="8dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textNomeHabito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            tools:text="Beber 2L de água" />
+
+        <TextView
+            android:id="@+id/textMetaHabito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            tools:text="Meta: 7x por semana" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageStatusHabito"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@string/status_habito_feito"
+        android:src="@android:drawable/checkbox_on_background" />
+
+</LinearLayout>
