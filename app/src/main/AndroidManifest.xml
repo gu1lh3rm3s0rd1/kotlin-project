@@ -7,12 +7,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar">
 
-        <!--
-            O app tem dois ícones na tela inicial do celular:
-            "Rotina" abre a Etapa 2 (Compose) e "Rotina (Views)" abre a Etapa 1 (XML).
-        -->
-
-        <!-- Etapa 2: Jetpack Compose -->
+        <!-- Tela inicial do app (Jetpack Compose) -->
         <activity
             android:name=".etapa2.MainActivity"
             android:exported="true">
@@ -22,16 +17,10 @@
             </intent-filter>
         </activity>
 
-        <!-- Etapa 1: Views/XML -->
+        <!-- Versão clássica (Views/XML): aberta pelo botão "Versão clássica" da tela inicial -->
         <activity
             android:name=".etapa1.ListaHabitosActivity"
-            android:exported="true"
-            android:label="@string/app_name_etapa1">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
 
         <activity
             android:name=".etapa1.DetalheHabitoActivity"

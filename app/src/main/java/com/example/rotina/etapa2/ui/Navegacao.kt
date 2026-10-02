@@ -1,12 +1,15 @@
 package com.example.rotina.etapa2.ui
 
+import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.example.rotina.etapa1.ListaHabitosActivity
 import com.example.rotina.etapa2.data.HabitoRepository
 
 /**
@@ -17,6 +20,7 @@ import com.example.rotina.etapa2.data.HabitoRepository
 @Composable
 fun Navegacao(repository: HabitoRepository) {
     val backStack = rememberNavBackStack(ListaRota)
+    val context = LocalContext.current
 
     // Volta para a tela anterior. Nunca remove a última tela:
     // o NavDisplay não aceita um back stack vazio (o app fecharia com erro).
@@ -40,7 +44,11 @@ fun Navegacao(repository: HabitoRepository) {
                 ListaHabitosScreen(
                     viewModel = viewModel,
                     aoClicarHabito = { id -> backStack.add(DetalheRota(id)) },
-                    aoClicarNovoHabito = { backStack.add(FormularioRota()) }
+                    aoClicarNovoHabito = { backStack.add(FormularioRota()) },
+                    // Abre a versão feita com Views/XML por meio de uma Intent explícita
+                    aoAbrirVersaoClassica = {
+                        context.startActivity(Intent(context, ListaHabitosActivity::class.java))
+                    }
                 )
             }
 

@@ -12,6 +12,7 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,13 +25,23 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun ListaHabitosScreen(
     viewModel: ListaHabitosViewModel,
     aoClicarHabito: (Int) -> Unit,
-    aoClicarNovoHabito: () -> Unit
+    aoClicarNovoHabito: () -> Unit,
+    aoAbrirVersaoClassica: () -> Unit
 ) {
     // Lê o StateFlow do ViewModel; a coleta pausa quando o app vai para segundo plano
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Meus hábitos") }) },
+        topBar = {
+            TopAppBar(
+                title = { Text("Meus hábitos") },
+                actions = {
+                    TextButton(onClick = aoAbrirVersaoClassica) {
+                        Text("Versão clássica")
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             // Só mostra o botão quando há lista (no estado vazio já existe um botão no meio da tela)
             if (uiState is ListaUiState.Conteudo) {
