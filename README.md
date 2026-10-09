@@ -6,12 +6,12 @@ O **Constância** ajuda a acompanhar hábitos do dia a dia (ex.: beber água, le
 O usuário cadastra seus hábitos com uma meta semanal, vê a lista de hábitos e marca
 quais já fez hoje. Os dados ficam salvos no celular e continuam lá depois de fechar o app.
 
-O projeto foi feito em duas etapas, e as duas estão no mesmo app, com **um único ícone**:
+O projeto foi feito em duas entregas, a **Parcial** (chamada de Etapa 1 neste README e no código) e a **Etapa 2**, e as duas estão no mesmo app, com **um único ícone**:
 
 | Onde fica no app | Etapa | Tecnologia |
 |---|---|---|
 | Tela inicial **"Meus hábitos"** | Etapa 2 | Jetpack Compose, Navigation 3, ViewModel e Room |
-| Menu **⋮ (Mais opções) > "Versão original (XML)"**, no canto superior direito da tela inicial | Etapa 1 | Views com layouts XML, ViewBinding e Intent explícita (dados mockados) |
+| Menu **⋮ (Mais opções) > "Versão original (XML)"**, no canto superior direito da tela inicial | Parcial (Etapa 1) | Views com layouts XML, ViewBinding e Intent explícita (dados mockados) |
 
 ## Como rodar o projeto
 
