@@ -12,7 +12,7 @@ import com.example.rotina.etapa2.data.RotinaDatabase
  */
 class RotinaApplication : Application() {
 
-    private val database by lazy {
+    val database by lazy {
         Room.databaseBuilder(this, RotinaDatabase::class.java, "rotina.db").build()
     }
 

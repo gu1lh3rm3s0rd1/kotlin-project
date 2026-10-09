@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Versão clássica (Views/XML): aberta pelo botão "Versão clássica" da tela inicial -->
+        <!-- Versão original em Views/XML (dados de demonstração): aberta pelo menu "Mais opções" da tela inicial -->
         <activity
             android:name=".etapa1.ListaHabitosActivity"
             android:exported="false" />

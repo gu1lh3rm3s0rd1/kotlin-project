@@ -1,8 +1,8 @@
-# Rotina — App de acompanhamento de hábitos
+# Constância — App de acompanhamento de hábitos
 
 ## Objetivo do aplicativo
 
-O **Rotina** ajuda a acompanhar hábitos do dia a dia (ex.: beber água, ler, meditar).
+O **Constância** ajuda a acompanhar hábitos do dia a dia (ex.: beber água, ler, meditar).
 O usuário cadastra seus hábitos com uma meta semanal, vê a lista de hábitos e marca
 quais já fez hoje. Os dados ficam salvos no celular e continuam lá depois de fechar o app.
 
@@ -11,7 +11,7 @@ O projeto foi feito em duas etapas, e as duas estão no mesmo app, com **um úni
 | Onde fica no app | Etapa | Tecnologia |
 |---|---|---|
 | Tela inicial **"Meus hábitos"** | Etapa 2 | Jetpack Compose, Navigation 3, ViewModel e Room |
-| Botão **"Versão clássica"** (canto superior direito da tela inicial) | Etapa 1 | Views com layouts XML, ViewBinding e Intent explícita (dados mockados) |
+| Menu **⋮ (Mais opções) > "Versão original (XML)"**, no canto superior direito da tela inicial | Etapa 1 | Views com layouts XML, ViewBinding e Intent explícita (dados mockados) |
 
 ## Como rodar o projeto
 
@@ -27,13 +27,16 @@ O projeto foi feito em duas etapas, e as duas estão no mesmo app, com **um úni
 3. Selecione a configuração **app** e um emulador/celular.
 4. Clique em **Run ▶**.
 
-O app abre na Etapa 2. Para ver a Etapa 1, toque no botão **"Versão clássica"** no canto superior direito da tela inicial.
+O app abre na Etapa 2. Para ver a Etapa 1, toque no menu **⋮** (canto superior direito da tela inicial) e escolha **"Versão original (XML)"**. Para voltar, use o botão/gesto "voltar" do Android.
+
+> A Etapa 1 usa dados de demonstração (mockados): marcar um hábito como feito ali muda só a tela de detalhe e não é salvo. A persistência é da Etapa 2.
 
 Também é possível compilar pelo terminal:
 
 ```bash
 ./gradlew assembleDebug        # gera o APK em app/build/outputs/apk/debug/
-./gradlew testDebugUnitTest    # roda os testes unitários
+./gradlew testDebugUnitTest    # roda os testes unitários (no computador)
+./gradlew connectedDebugAndroidTest   # roda os testes no emulador/celular conectado
 ```
 
 O projeto **não usa chaves de API nem senhas**, então não é preciso nenhum arquivo `.env`.
@@ -104,10 +107,32 @@ Tela (Compose)  --evento (ex.: clicou em salvar)-->  ViewModel  -->  Repository 
 | **Kotlinx Serialization** | Permite salvar as rotas do back stack (`@Serializable`) |
 | **Room (runtime, ktx, compiler)** | Banco de dados local (SQLite) para salvar os hábitos |
 | **KSP** | Ferramenta que gera o código do Room durante a compilação |
-| **JUnit 4** | Testes unitários da validação do formulário |
+| **JUnit 4** | Testes unitários (validação, Repository e ViewModels) |
+| **Kotlinx Coroutines Test** | Permite testar código com coroutines (ViewModels) nos testes unitários |
+| **Compose UI Test / Espresso / AndroidX Test** | Testes que abrem o app no emulador e clicam nas telas (Compose e XML) |
 
 ## Testes
 
-Os testes unitários ficam em `app/src/test/java/com/example/rotina/etapa2/ValidacaoHabitoTest.kt`
-e verificam as regras do formulário (nome obrigatório, tamanho máximo, meta de 1 a 7).
-Para rodar: `./gradlew testDebugUnitTest` ou clique com o botão direito no arquivo > **Run**.
+**Testes unitários** (`app/src/test/.../etapa2/`, rodam no computador, sem emulador):
+
+| Arquivo | O que verifica |
+|---|---|
+| `ValidacaoHabitoTest` | Regras do formulário: nome obrigatório (3 a 40 caracteres), descrição até 120, meta de 1 a 7 |
+| `HabitoRepositoryTest` | Criar, editar sem duplicar, marcar/desmarcar "feito hoje" e excluir |
+| `ListaHabitosViewModelTest` | Estados de lista vazia, conteúdo e **erro** (com "Tentar novamente") e o checkbox |
+| `FormularioHabitoViewModelTest` | Erros de validação, dados salvos sem espaços extras, descrição vazia salva como nula, edição |
+| `DetalheHabitoViewModelTest` | Hábito não encontrado, marcar como feito e excluir antes de voltar |
+
+Esses testes usam um `FakeHabitoDao` (banco "de mentira" em memória) no lugar do Room.
+
+**Testes instrumentados** (`app/src/androidTest/.../etapa2/`, rodam no emulador/celular):
+
+| Arquivo | O que verifica |
+|---|---|
+| `HabitoDaoTest` | Consultas do Room de verdade (banco temporário em memória) |
+| `FluxoHabitosTest` | Abre o app e percorre o fluxo: lista vazia → validação → criar → checkbox → detalhe → editar → excluir, além da versão XML pelo menu |
+
+Atenção: o `FluxoHabitosTest` apaga os hábitos salvos no aparelho onde roda.
+
+Para rodar: `./gradlew testDebugUnitTest` e `./gradlew connectedDebugAndroidTest` (com um emulador ligado),
+ou clique com o botão direito na pasta `test`/`androidTest` > **Run Tests**.

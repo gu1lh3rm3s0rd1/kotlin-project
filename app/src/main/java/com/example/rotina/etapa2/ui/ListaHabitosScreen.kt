@@ -1,22 +1,31 @@
 package com.example.rotina.etapa2.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -26,18 +35,34 @@ fun ListaHabitosScreen(
     viewModel: ListaHabitosViewModel,
     aoClicarHabito: (Int) -> Unit,
     aoClicarNovoHabito: () -> Unit,
-    aoAbrirVersaoClassica: () -> Unit
+    aoAbrirVersaoXml: () -> Unit
 ) {
     // Lê o StateFlow do ViewModel; a coleta pausa quando o app vai para segundo plano
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var menuAberto by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Meus hábitos") },
                 actions = {
-                    TextButton(onClick = aoAbrirVersaoClassica) {
-                        Text("Versão clássica")
+                    // Menu "três pontinhos": dá acesso à versão original do app, feita com Views/XML
+                    Box {
+                        IconButton(onClick = { menuAberto = true }) {
+                            Icon(Icons.Filled.MoreVert, contentDescription = "Mais opções")
+                        }
+                        DropdownMenu(
+                            expanded = menuAberto,
+                            onDismissRequest = { menuAberto = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Versão original (XML)") },
+                                onClick = {
+                                    menuAberto = false
+                                    aoAbrirVersaoXml()
+                                }
+                            )
+                        }
                     }
                 }
             )
@@ -48,7 +73,9 @@ fun ListaHabitosScreen(
                 ExtendedFloatingActionButton(
                     onClick = aoClicarNovoHabito,
                     icon = { Icon(Icons.Filled.Add, contentDescription = null) },
-                    text = { Text("Novo hábito") }
+                    text = { Text("Novo hábito") },
+                    // Sem isto, o leitor de tela (TalkBack) anunciava só "botão", sem o nome
+                    modifier = Modifier.semantics { contentDescription = "Novo hábito" }
                 )
             }
         }

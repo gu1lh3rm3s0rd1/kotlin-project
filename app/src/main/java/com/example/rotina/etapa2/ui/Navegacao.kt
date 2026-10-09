@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -22,17 +23,26 @@ fun Navegacao(repository: HabitoRepository) {
     val backStack = rememberNavBackStack(ListaRota)
     val context = LocalContext.current
 
-    // Volta para a tela anterior. Nunca remove a última tela:
+    // Abre uma tela. Se ela já é a tela do topo (ex.: toque duplo rápido), não abre de novo.
+    fun abrir(rota: NavKey) {
+        if (backStack.lastOrNull() != rota) {
+            backStack.add(rota)
+        }
+    }
+
+    // Fecha a tela [rota]. Só remove se ela ainda estiver no topo, para que um toque
+    // duplo no "voltar" não feche também a tela de baixo. Nunca remove a última tela:
     // o NavDisplay não aceita um back stack vazio (o app fecharia com erro).
-    fun voltar() {
-        if (backStack.size > 1) {
+    fun fechar(rota: NavKey) {
+        if (backStack.size > 1 && backStack.lastOrNull() == rota) {
             backStack.removeAt(backStack.lastIndex)
         }
     }
 
     NavDisplay(
         backStack = backStack,
-        onBack = { voltar() },
+        // Botão/gesto "voltar" do Android: fecha a tela do topo
+        onBack = { backStack.lastOrNull()?.let { fechar(it) } },
         // Faz cada tela ter o seu próprio ViewModel, que é descartado quando a tela sai do back stack
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
@@ -43,10 +53,10 @@ fun Navegacao(repository: HabitoRepository) {
                 val viewModel = viewModel { ListaHabitosViewModel(repository) }
                 ListaHabitosScreen(
                     viewModel = viewModel,
-                    aoClicarHabito = { id -> backStack.add(DetalheRota(id)) },
-                    aoClicarNovoHabito = { backStack.add(FormularioRota()) },
+                    aoClicarHabito = { id -> abrir(DetalheRota(id)) },
+                    aoClicarNovoHabito = { abrir(FormularioRota()) },
                     // Abre a versão feita com Views/XML por meio de uma Intent explícita
-                    aoAbrirVersaoClassica = {
+                    aoAbrirVersaoXml = {
                         context.startActivity(Intent(context, ListaHabitosActivity::class.java))
                     }
                 )
@@ -56,8 +66,8 @@ fun Navegacao(repository: HabitoRepository) {
                 val viewModel = viewModel { DetalheHabitoViewModel(repository, rota.habitoId) }
                 DetalheHabitoScreen(
                     viewModel = viewModel,
-                    aoVoltar = { voltar() },
-                    aoEditar = { backStack.add(FormularioRota(rota.habitoId)) }
+                    aoVoltar = { fechar(rota) },
+                    aoEditar = { abrir(FormularioRota(rota.habitoId)) }
                 )
             }
 
@@ -65,7 +75,7 @@ fun Navegacao(repository: HabitoRepository) {
                 val viewModel = viewModel { FormularioHabitoViewModel(repository, rota.habitoId) }
                 FormularioHabitoScreen(
                     viewModel = viewModel,
-                    aoVoltar = { voltar() }
+                    aoVoltar = { fechar(rota) }
                 )
             }
         }
